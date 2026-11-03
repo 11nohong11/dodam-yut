@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>도담윷놀이</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&display=swap">
+<style>
+:root{--bg:#fdf1e4;--ink:#6e4314;--sub:#9a7a52;--wood:#f4d494;--woodline:#8a5a22;--back:#7a4a1c;--seal:#b9651a;--card:#f6e2c6;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Gowun Dodum",system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:20px 20px 24px;max-width:480px;margin:0 auto;user-select:none}
+h1{font-family:"Black Han Sans",system-ui,sans-serif;font-weight:400;font-size:28px;margin:0;letter-spacing:.04em}
+.top{text-align:center}
+.top p{margin:4px 0 0;color:var(--sub);font-size:15px}
+.stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;width:100%}
+.sticks{display:flex;gap:14px;perspective:600px}
+.stick{width:50px;height:156px;border-radius:25px;position:relative;transition:background .2s;border:2px solid #4a2a0c;background:repeating-linear-gradient(97deg,rgba(0,0,0,.13) 0 2px,transparent 2px 7px),linear-gradient(90deg,#4e2c0e,#85541f 30%,#a06a2c 52%,#6d4115 80%,#4a2a0c);box-shadow:0 10px 12px -4px rgba(70,42,10,.4),inset 0 -10px 12px rgba(0,0,0,.25),inset 0 10px 10px rgba(255,220,160,.18)}
+.stick::after{content:"";position:absolute;left:11px;top:14px;width:6px;height:46px;border-radius:3px;background:linear-gradient(rgba(255,235,190,.5),transparent)}
+.stick.flat{border-color:#8a5a22;background:repeating-linear-gradient(95deg,rgba(150,100,40,.12) 0 1px,transparent 1px 6px),linear-gradient(90deg,#d9aa5c,#f6d998 40%,#f9e4ae 55%,#dcae62)}
+.stick.flat::after{display:none}
+.stick::before{content:"";position:absolute;left:0;right:0;top:20px;bottom:20px;background-repeat:no-repeat;background-size:18px 18px;background-position:50% 0%,50% 0%,50% 50%,50% 50%,50% 100%,50% 100%;background-image:linear-gradient(45deg,transparent calc(50% - 1.8px),#2a1204 calc(50% - 1.8px),#2a1204 calc(50% + 1.8px),transparent calc(50% + 1.8px)),linear-gradient(135deg,transparent calc(50% - 1.8px),#2a1204 calc(50% - 1.8px),#2a1204 calc(50% + 1.8px),transparent calc(50% + 1.8px)),linear-gradient(45deg,transparent calc(50% - 1.8px),#2a1204 calc(50% - 1.8px),#2a1204 calc(50% + 1.8px),transparent calc(50% + 1.8px)),linear-gradient(135deg,transparent calc(50% - 1.8px),#2a1204 calc(50% - 1.8px),#2a1204 calc(50% + 1.8px),transparent calc(50% + 1.8px)),linear-gradient(45deg,transparent calc(50% - 1.8px),#2a1204 calc(50% - 1.8px),#2a1204 calc(50% + 1.8px),transparent calc(50% + 1.8px)),linear-gradient(135deg,transparent calc(50% - 1.8px),#2a1204 calc(50% - 1.8px),#2a1204 calc(50% + 1.8px),transparent calc(50% + 1.8px))}
+.stick.flat::before{display:none}
+.stick.spin{animation:flip .12s linear infinite}
+@keyframes flip{0%{transform:rotateX(0) translateY(0)}50%{transform:rotateX(180deg) translateY(-18px)}100%{transform:rotateX(360deg) translateY(0)}}
+.result{text-align:center;min-height:132px}
+.name{font-family:"Black Han Sans",system-ui,sans-serif;font-size:84px;line-height:1;color:var(--seal)}
+.name.pop{animation:pop .35s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.move{font-size:18px;margin-top:6px;color:var(--sub)}
+.bonus{display:inline-block;margin-top:8px;padding:4px 12px;border-radius:999px;background:var(--seal);color:#fff;font-size:15px}
+.bottom{width:100%}
+.hist{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;min-height:34px;margin-bottom:16px}
+.chip{background:var(--card);padding:5px 12px;border-radius:999px;font-size:15px}
+button{width:100%;height:68px;border:0;border-radius:20px;background:var(--ink);color:var(--bg);font:inherit;font-size:24px;font-weight:700;touch-action:manipulation}
+button:active{transform:scale(.98)}
+button:disabled{opacity:.5}
+button:focus-visible{outline:3px solid var(--seal);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){.stick.spin,.name.pop{animation:none}}
+</style>
+</head>
+<body>
+<div class="top"><h1>도담윷놀이</h1><p>버튼을 눌러 윷을 던져 보세요</p></div>
+<div class="stage">
+<div class="sticks" id="sticks"><div class="stick"></div><div class="stick"></div><div class="stick"></div><div class="stick"></div></div>
+<div class="result" id="result"><div class="name" id="name">?</div><div class="move" id="move">아직 던지지 않았어요</div></div>
+</div>
+<div class="bottom">
+<div class="hist" id="hist"></div>
+<button id="btn">윷 던지기</button>
+</div>
+<script>
+var R={0:["모",5],1:["도",1],2:["개",2],3:["걸",3],4:["윷",4]};
+var sticks=[].slice.call(document.querySelectorAll(".stick")),btn=document.getElementById("btn"),
+nameEl=document.getElementById("name"),moveEl=document.getElementById("move"),hist=document.getElementById("hist"),
+result=document.getElementById("result"),busy=false,log=[];
+function throwYut(){
+if(busy)return;busy=true;btn.disabled=true;
+sticks.forEach(function(s){s.classList.add("spin")});
+nameEl.textContent="…";moveEl.textContent="던지는 중";
+var old=result.querySelector(".bonus");if(old)old.remove();
+try{navigator.vibrate&&navigator.vibrate(40)}catch(e){}
+setTimeout(function(){
+var flats=0;
+sticks.forEach(function(s){var f=Math.random()<0.5;if(f)flats++;s.classList.remove("spin");s.classList.toggle("flat",f)});
+var r=R[flats];
+nameEl.textContent=r[0];nameEl.classList.remove("pop");void nameEl.offsetWidth;nameEl.classList.add("pop");
+moveEl.textContent=r[1]+"칸 이동";
+if(flats===0||flats===4){var b=document.createElement("div");b.className="bonus";b.textContent="한 번 더 던지세요!";result.appendChild(b)}
+log.unshift(r[0]);log=log.slice(0,8);
+hist.innerHTML=log.map(function(t){return '<span class="chip">'+t+'</span>'}).join("");
+try{navigator.vibrate&&navigator.vibrate([30,40,30])}catch(e){}
+busy=false;btn.disabled=false;
+},900);
+}
+btn.addEventListener("click",throwYut);
+</script>
+</body>
+</html>
